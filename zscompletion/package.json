@@ -1,7 +1,7 @@
 {
   "name": "zsbc",
-  "displayName": "Zenscript Brackethandler Completion",
-  "description": "Zenscript bracket handlers completion, using data dumped from a custom crafttweaker script.",
+  "displayName": "ZenScript Bracket Completion",
+  "description": "ZenScript bracket handlers completion, using data dumped from a custom crafttweaker script.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.79.0"
@@ -20,7 +20,7 @@
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Zenscript Brackethandler Completion",
+      "title": "ZenScript Bracket Completion",
       "order": 21,
       "properties": {
         "zsbc.alwaysReload": {
@@ -48,7 +48,7 @@
     "commands": [
 			{
 				"command": "zsbc.reload",
-				"title": "ZenScript Completion: Reload data"
+				"title": "ZenScript Completion: Reload data from CraftTweaker"
 			},
       {
         "command": "zsbc.helloWorld",
