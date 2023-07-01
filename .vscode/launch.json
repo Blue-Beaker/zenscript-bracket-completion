@@ -10,10 +10,10 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/zscompletion"
+				"--extensionDevelopmentPath=${workspaceFolder}/zsbc"
 			],
 			"outFiles": [
-				"${workspaceFolder}/zscompletion/out/**/*.js"
+				"${workspaceFolder}/zsbc/out/**/*.js"
 			],
 			"preLaunchTask": "${defaultBuildTask}"
 		},
@@ -22,11 +22,11 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/zscompletion",
-				"--extensionTestsPath=${workspaceFolder}/zscompletion/out/test/suite/index"
+				"--extensionDevelopmentPath=${workspaceFolder}/zsbc",
+				"--extensionTestsPath=${workspaceFolder}/zsbc/out/test/suite/index"
 			],
 			"outFiles": [
-				"${workspaceFolder}/zscompletion/out/test/**/*.js"
+				"${workspaceFolder}/zsbc/out/test/**/*.js"
 			],
 			"preLaunchTask": "${defaultBuildTask}"
 		}
