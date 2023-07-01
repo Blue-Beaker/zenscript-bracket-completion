@@ -44,12 +44,12 @@ export class DataHandler{
             const lines = content.split(/\r?\n/);
             var startindex:number|undefined=undefined;
             var endindex:number|undefined=undefined;
-            for (var i=0;i<lines.length;i++) {
-                if(lines[i].indexOf("[ZSBC DUMPER START]")>=0){
-                    startindex = i;
-                }
+            for (var i=lines.length-1;i>=0;i--) {
                 if(lines[i].indexOf("[ZSBC DUMPER END]")>=0){
                     endindex=i;
+                }
+                if(lines[i].indexOf("[ZSBC DUMPER START]")>=0){
+                    startindex = i;
                 }
                 if(startindex&&endindex){
                     break;
