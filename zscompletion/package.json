@@ -10,6 +10,9 @@
     "Other"
   ],
   "activationEvents": [
+    "onLanguage:properties",
+    "onLanguage:toml",
+    "onLanguage:json",
     "onLanguage:mcfunction",
     "onLanguage:zenscript",
     "onLanguage:javascript",
@@ -20,14 +23,14 @@
       "title": "Zenscript Brackethandler Completion",
       "order": 21,
       "properties": {
+        "zsbc.alwaysReload": {
+          "type": "boolean",
+          "markdownDescription": "Always reload from crafttweaker.log. If set to false you need to reload manually.",
+          "scope": "window"
+        },
         "zsbc.path": {
           "type": "string",
           "markdownDescription": "Path to your crafttweaker.log",
-          "scope": "window"
-        },
-        "zsbc.cache_path": {
-          "type": "string",
-          "markdownDescription": "Path to store caches of ZSBC so there is no need to read from crafttweaker.log every time.",
           "scope": "window"
         },
         "zsbc.ctapi": {
@@ -38,6 +41,9 @@
           "scope": "window"
         }
       }
+    },
+    "capabilities" : {
+      "hoverProvider" : "true"
     },
     "commands": [
 			{

@@ -1,32 +1,26 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import {DataReader} from "./datareader";
+import {DataHandler} from "./datareader";
 
-const reader = new DataReader();
-export const outputChannel = vscode.window.createOutputChannel("ZSBC Output",{log: true});
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+export var workspaceStoragePath:vscode.Uri|undefined;
+export const outputChannel = vscode.window.createOutputChannel("Zenscript Bracket Completion",{log: true});
+
+const reader = new DataHandler();
+// The extension will activate on "properties","toml","json","mcfunction","zenscript", "javascript", "typescript" languages.
 export function activate(context: vscode.ExtensionContext) {
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "zsbc" is now active!');
-	const outputChannel = vscode.window.createOutputChannel("ZSBC Output",{log: true});
-	outputChannel.show();
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('zsbc.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from zsbc!');
-	});
-	context.subscriptions.push(disposable);
-	outputChannel.show();
-	const logpath:string=vscode.workspace.getConfiguration('zsbc').path;
-	reader.loadItemsFromCrafttweakerLog(logpath);
-	
-	const provider: vscode.CompletionItemProvider<vscode.CompletionItem> = {
+	outputChannel.show(true);
+	workspaceStoragePath=context.storageUri;
+	context.subscriptions.push(vscode.commands.registerCommand('zsbc.reload', () => {
+		reloadFromPath();
+	}));
+	if(vscode.workspace.getConfiguration("zsbc").alwaysReload){
+		tryReloadFirst();
+	}else{
+		tryLoadCacheFirst();
+	}
+	// Autocompletion provider
+	const completionProvider: vscode.CompletionItemProvider<vscode.CompletionItem> = {
 		provideCompletionItems(document, position, token, context) {
 			var completion:vscode.CompletionItem[]=[];
 		  	reader
@@ -34,18 +28,45 @@ export function activate(context: vscode.ExtensionContext) {
 			return completion;
 		},
 	  };
-	
-	  const langs = ["zenscript", "javascript", "typescript"];
+	  const hoverProvider: vscode.HoverProvider = {
+		provideHover(document, position, token) {
+			var range=document.getWordRangeAtPosition(position,/[\w\-:]+/);
+			var str = document.getText(range);
+			var result=reader.getItems().get("<"+str+">");
+			return new vscode.Hover(result||"",range);
+		},
+	  };
+
+	  const langs = ["properties","toml","json","mcfunction","zenscript", "javascript", "typescript"];
 	  for (const language of langs) {
 		context.subscriptions.push(
-		  vscode.languages.registerCompletionItemProvider({ language }, provider)
+		  vscode.languages.registerCompletionItemProvider({ language }, completionProvider),
+		  vscode.languages.registerHoverProvider({ language }, hoverProvider)
 		);
-	  }
+	  };
+
+
 }
 
-function reloadFromPath() {
-	const path = vscode.workspace.getConfiguration("tmmi").path;
-	reader.loadItemsFromCrafttweakerLog(path);
-  }
+async function reloadFromPath() {
+	const path = vscode.workspace.getConfiguration("zsbc").path;
+	return await reader.loadItemsFromCrafttweakerLog(path);
+}
+async function loadFromCache() {
+	return await reader.loadCache(workspaceStoragePath);
+}
+async function tryLoadCacheFirst(){
+	if(!await loadFromCache()){
+		outputChannel.info("Can't load cache, loading from CT log");
+		return await reloadFromPath();
+	}
+}
+async function tryReloadFirst() {
+	if(!await reloadFromPath()){
+		outputChannel.info("Can't load from CT log, loading cache");
+		return await loadFromCache();
+	}
+	
+}
 // This method is called when your extension is deactivated
 export function deactivate() {}
