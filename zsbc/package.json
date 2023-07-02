@@ -4,6 +4,7 @@
   "description": "ZenScript bracket handlers completion for your modded Minecraft instance.",
   "version": "0.0.1",
   "icon": "icon.png",
+  "publisher": "BlueBeaker",
   "engines": {
     "vscode": "^1.79.0"
   },
@@ -92,5 +93,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Blue-Beaker/zenscript-bracket-completion"
+  },
+  "homepage": "https://github.com/Blue-Beaker/zenscript-bracket-completion/blob/master/README.md",
+  "license": "https://github.com/Blue-Beaker/zenscript-bracket-completion/blob/master/LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/Blue-Beaker/zenscript-bracket-completion/issues"
   }
 }
