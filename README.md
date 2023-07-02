@@ -26,6 +26,7 @@ This extension contributes the following settings:
 * `zsbc.alwaysReload`: Prefer reloading from crafttweaker log every time. When set to false, only reload when cache is missing.
 * `zsbc.path`: Point to your `crafttweaker.log`. Normally it's directly in your `.minecraft` folder.
 * `zsbc.ctapi`: CraftTweaker version to use. Currently does nothing.
+* `zsbc.onlyCompleteBrackets`: Only triggers completion after brackethandler brackets.
 
 ## Setup
 1. Install Crafttweaker on your Minecraft instance.
