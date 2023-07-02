@@ -25,7 +25,14 @@
       "properties": {
         "zsbc.alwaysReload": {
           "type": "boolean",
-          "markdownDescription": "Always reload from crafttweaker.log. If set to false you need to reload manually.",
+          "markdownDescription": "Always reload from crafttweaker.log when extension starts. If set to false you need to reload manually.",
+          "default":"true",
+          "scope": "window"
+        },
+        "zsbc.onlyCompleteBrackets": {
+          "type": "boolean",
+          "markdownDescription": "Only trigger completion in brackethandler brackets.",
+          "default":"true",
           "scope": "window"
         },
         "zsbc.path": {

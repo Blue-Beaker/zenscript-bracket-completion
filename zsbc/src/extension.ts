@@ -25,8 +25,12 @@ export function activate(context: vscode.ExtensionContext) {
 	const completionProvider: vscode.CompletionItemProvider<vscode.CompletionItem> = {
 		provideCompletionItems(document, position, token, context) {
 			var completion:vscode.CompletionItem[]=[];
+			var range=document.getWordRangeAtPosition(position,/[<>\w\-:]+/);
+			if(vscode.workspace.getConfiguration("zsbc").onlyCompleteBrackets && !document.getText(range).startsWith("<")){
+				return undefined;
+			}
 		  	reader
-			.getItems().forEach((value,key,map)=>{completion.push({label:{label:key,detail:" "+value},detail:value,kind:vscode.CompletionItemKind.Value,range:document.getWordRangeAtPosition(position,/[<>\w\-:]+/)} as vscode.CompletionItem);});
+			.getItems().forEach((value,key,map)=>{completion.push({label:{label:key,detail:" "+value},detail:value,kind:vscode.CompletionItemKind.Value,range:range} as vscode.CompletionItem);});
 			return completion;
 		},
 	  };
