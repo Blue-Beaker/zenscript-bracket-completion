@@ -1,13 +1,14 @@
 {
   "name": "zsbc",
   "displayName": "ZenScript Bracket Completion",
-  "description": "ZenScript bracket handlers completion, using data dumped from a custom crafttweaker script.",
+  "description": "ZenScript bracket handlers completion for your modded Minecraft instance.",
   "version": "0.0.1",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.79.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages"
   ],
   "activationEvents": [
     "onLanguage:properties",
@@ -49,6 +50,13 @@
         }
       }
     },
+    "languages": [
+      {
+        "id": "zenscript",
+        "aliases": ["Zenscript", "ZenScript"],
+        "extensions": [".zs"]
+      }
+    ],
     "capabilities" : {
       "hoverProvider" : "true"
     },
