@@ -11,9 +11,11 @@ const reader = new DataHandler();
 export function activate(context: vscode.ExtensionContext) {
 	outputChannel.show(true);
 	workspaceStoragePath=context.storageUri;
+	
 	context.subscriptions.push(vscode.commands.registerCommand('zsbc.reload', () => {
 		reloadFromPath();
 	}));
+
 	if(vscode.workspace.getConfiguration("zsbc").alwaysReload){
 		tryReloadFirst();
 	}else{
@@ -24,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 		provideCompletionItems(document, position, token, context) {
 			var completion:vscode.CompletionItem[]=[];
 		  	reader
-			.getItems().forEach((value,key,map)=>{completion.push({label:{label:key,detail:" "+value},detail:value,kind:vscode.CompletionItemKind.Value} as vscode.CompletionItem);});
+			.getItems().forEach((value,key,map)=>{completion.push({label:{label:key,detail:" "+value},detail:value,kind:vscode.CompletionItemKind.Value,range:document.getWordRangeAtPosition(position,/[<>\w\-:]+/)} as vscode.CompletionItem);});
 			return completion;
 		},
 	  };

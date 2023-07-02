@@ -48,7 +48,8 @@
     "commands": [
 			{
 				"command": "zsbc.reload",
-				"title": "ZenScript Bracket Completion: Reload data from CraftTweaker"
+				"title": "Reload data from CraftTweaker",
+        "category": "ZenScript Bracket Completion"
 			}
     ]
   },

@@ -36,29 +36,36 @@ export class DataHandler{
         }
         outputChannel.appendLine("Loaded "+this.items.size+" entries!");
     }
+
+    private findDumpRange(lines:string[]) {
+        var startindex:number|undefined=undefined;
+        var endindex:number|undefined=undefined;
+        for (var i=lines.length-1;i>=0;i--) {
+            if(lines[i].indexOf("[ZSBC DUMPER END]")>=0){
+                endindex=i;
+                outputChannel.appendLine("Found "+lines[i]+" at line "+i);
+            }
+            if(endindex){
+                if(lines[i].indexOf("[ZSBC DUMPER START]")>=0){
+                    startindex = i;
+                    outputChannel.appendLine("Found "+lines[i]+" at line "+i);
+                    return [startindex,endindex];
+                }
+            }
+        }
+        return [startindex,endindex];
+    }
     //Reload lines from Crafttweaker Log, which has our dumped data in it.
     public async loadItemsFromCrafttweakerLog(path: string) {
         try {
             outputChannel.appendLine("Trying to load from CT log");
             const content = await this.getContent(path);
             const lines = content.split(/\r?\n/);
-            var startindex:number|undefined=undefined;
-            var endindex:number|undefined=undefined;
-            for (var i=lines.length-1;i>=0;i--) {
-                if(lines[i].indexOf("[ZSBC DUMPER END]")>=0){
-                    endindex=i;
-                }
-                if(lines[i].indexOf("[ZSBC DUMPER START]")>=0){
-                    startindex = i;
-                }
-                if(startindex&&endindex){
-                    break;
-                }
-            }
+            var indexes=this.findDumpRange(lines);
+            var startindex=indexes[0];
+            var endindex=indexes[1];
             if(startindex&&endindex){
                 outputChannel.appendLine("Found dumped data in CT log:");
-                outputChannel.appendLine("Found "+lines[startindex]+" at line "+startindex);
-                outputChannel.appendLine("Found "+lines[endindex]+" at line "+endindex);
                 const datalines=lines.slice(startindex+1,endindex);
                 this.parseItemsFromLines(datalines);
                 if(workspaceStoragePath){
