@@ -36,7 +36,6 @@ export class DataHandler{
         }
         outputChannel.appendLine("Loaded "+this.items.size+" entries!");
     }
-
     private findDumpRange(lines:string[]) {
         var startindex:number|undefined=undefined;
         var endindex:number|undefined=undefined;
@@ -78,6 +77,33 @@ export class DataHandler{
             }
         } catch (e) {
             vscode.window.showErrorMessage(String(e));
+            return false;
+        }
+    }
+
+    private addAdditionalListToItems(lines:string[])   {
+        var count=0;
+        for (var i=0;i<lines.length;i++){
+            if(lines[i].trim().startsWith("<")){
+                var split=lines[i].split(" = ",2);
+                if(!this.items.has(split[0])){
+                    this.items.set(split[0],split[1]||"");
+                    count++;
+                }
+            }
+        }
+        outputChannel.appendLine("Loaded "+count+" additional entries from auxliary list!");
+    }
+    public async loadAdditionalList(path:string){
+        try {
+            var path=pathlib.resolve(path);
+            outputChannel.appendLine("loading from auxliary list at "+path);
+            const content = await this.getContent(path);
+            const lines = content.split(/\r?\n/);
+            this.addAdditionalListToItems(lines);
+            return true;
+        } catch (error) {
+            outputChannel.error(String(error));
             return false;
         }
     }

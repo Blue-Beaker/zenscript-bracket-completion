@@ -42,6 +42,11 @@
           "markdownDescription": "Path to your crafttweaker.log",
           "scope": "window"
         },
+        "zsbc.additional_path": {
+          "type": "string",
+          "markdownDescription": "Path to your additional brackets file. Only lines starts with a < will be added to completion.",
+          "scope": "window"
+        },
         "zsbc.ctapi": {
           "type": "string",
           "default":"mc1.12.x",

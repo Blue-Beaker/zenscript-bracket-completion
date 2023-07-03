@@ -7,3 +7,6 @@
 
 ## [0.0.2]
 - Updated information
+
+## [0.0.3]
+- Added functionality for loading an additional list.

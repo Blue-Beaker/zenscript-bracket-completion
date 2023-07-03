@@ -13,14 +13,9 @@ export function activate(context: vscode.ExtensionContext) {
 	workspaceStoragePath=context.storageUri;
 	
 	context.subscriptions.push(vscode.commands.registerCommand('zsbc.reload', () => {
-		reloadFromPath();
+		doReloadFromPath();
 	}));
-
-	if(vscode.workspace.getConfiguration("zsbc").alwaysReload){
-		tryReloadFirst();
-	}else{
-		tryLoadCacheFirst();
-	}
+	initReload();
 	// Autocompletion provider
 	const completionProvider: vscode.CompletionItemProvider<vscode.CompletionItem> = {
 		provideCompletionItems(document, position, token, context) {
@@ -56,10 +51,25 @@ export function activate(context: vscode.ExtensionContext) {
 
 async function reloadFromPath() {
 	const path = vscode.workspace.getConfiguration("zsbc").path;
-	return await reader.loadItemsFromCrafttweakerLog(path);
+	var result= await reader.loadItemsFromCrafttweakerLog(path);
+	return result;
 }
 async function loadFromCache() {
 	return await reader.loadCache(workspaceStoragePath);
+}
+async function initReload() {
+	var result;
+	if(vscode.workspace.getConfiguration("zsbc").alwaysReload){
+		result=await tryReloadFirst();
+	}else{
+		result=await tryLoadCacheFirst();
+	}
+	await tryLoadAdditionalList();
+	return result;
+}
+async function doReloadFromPath() {
+	await reloadFromPath();
+	await tryLoadAdditionalList();
 }
 async function tryLoadCacheFirst(){
 	if(!await loadFromCache()){
@@ -72,7 +82,17 @@ async function tryReloadFirst() {
 		outputChannel.info("Can't load from CT log, loading cache");
 		return await loadFromCache();
 	}
-	
+}
+async function tryLoadAdditionalList() {
+	var additionalPath=vscode.workspace.getConfiguration("zsbc").additional_path;
+	if(additionalPath.length>0){
+		outputChannel.appendLine("Loading additional entries from "+additionalPath);
+		if(!await reader.loadAdditionalList(additionalPath)){
+			vscode.window.showErrorMessage("Can't load additional data in '"+additionalPath+"'!");
+			return false;
+		}
+		return true;
+	}
 }
 // This method is called when your extension is deactivated
 export function deactivate() {}
