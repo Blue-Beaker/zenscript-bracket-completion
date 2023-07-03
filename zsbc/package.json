@@ -2,7 +2,7 @@
   "name": "zsbc",
   "displayName": "ZenScript Bracket Completion",
   "description": "ZenScript bracket handlers completion for your modded Minecraft instance.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "icon": "icon.png",
   "publisher": "BlueBeaker",
   "engines": {
@@ -17,24 +17,35 @@
     "onLanguage:json",
     "onLanguage:mcfunction",
     "onLanguage:zenscript",
-    "onLanguage:javascript",
-    "onLanguage:typescript"],
+    "onLanguage:javascript"],
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "title": "ZenScript Bracket Completion",
       "order": 21,
       "properties": {
+        "zsbc.completionSuggestAllItems": {
+          "type": "boolean",
+          "markdownDescription": "Try to suggest ALL entries in every completion. Causes lag with a large list.",
+          "default":false,
+          "scope": "window"
+        },
+        "zsbc.completionSuggestWithStart": {
+          "type": "boolean",
+          "markdownDescription": "Only suggest entries with matching starts in completion. Reduces lag.",
+          "default":false,
+          "scope": "window"
+        },
         "zsbc.alwaysReload": {
           "type": "boolean",
           "markdownDescription": "Always reload from crafttweaker.log when extension starts. If set to false you need to reload manually.",
-          "default":"true",
+          "default":true,
           "scope": "window"
         },
         "zsbc.onlyCompleteBrackets": {
           "type": "boolean",
           "markdownDescription": "Only trigger completion in brackethandler brackets.",
-          "default":"true",
+          "default":true,
           "scope": "window"
         },
         "zsbc.path": {

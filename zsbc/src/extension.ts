@@ -5,7 +5,6 @@ import {DataHandler} from "./datareader";
 
 export var workspaceStoragePath:vscode.Uri|undefined;
 export const outputChannel = vscode.window.createOutputChannel("Zenscript Bracket Completion",{log: true});
-
 const reader = new DataHandler();
 // The extension will activate on "properties","toml","json","mcfunction","zenscript", "javascript", "typescript" languages.
 export function activate(context: vscode.ExtensionContext) {
@@ -19,13 +18,20 @@ export function activate(context: vscode.ExtensionContext) {
 	// Autocompletion provider
 	const completionProvider: vscode.CompletionItemProvider<vscode.CompletionItem> = {
 		provideCompletionItems(document, position, token, context) {
-			var completion:vscode.CompletionItem[]=[];
+			var configuration=vscode.workspace.getConfiguration("zsbc");
 			var range=document.getWordRangeAtPosition(position,/[<>\w\-:]+/);
-			if(vscode.workspace.getConfiguration("zsbc").onlyCompleteBrackets && !document.getText(range).startsWith("<")){
+			if(configuration.onlyCompleteBrackets && !document.getText(range).startsWith("<")){
 				return undefined;
 			}
+			var completion:vscode.CompletionItem[]=[];
 		  	reader
-			.getItems().forEach((value,key,map)=>{completion.push({label:{label:key,detail:" "+value},detail:value,kind:vscode.CompletionItemKind.Value,range:range} as vscode.CompletionItem);});
+			.getItems().forEach((value,key,map)=>{
+				if(!configuration.completionSuggestAllItems){
+					var match=document.getText(range);
+					if((configuration.completionSuggestWithStart&&!key.startsWith(match))||key.indexOf(match.slice(1))===-1){return;}
+				}
+				completion.push({label:{label:key,detail:" "+value},detail:value,kind:vscode.CompletionItemKind.Value,range:range} as vscode.CompletionItem);
+			});
 			return completion;
 		},
 	  };
@@ -38,7 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 		},
 	  };
 
-	  const langs = ["properties","toml","json","mcfunction","zenscript", "javascript", "typescript"];
+	  const langs = ["properties","toml","json","mcfunction","zenscript", "javascript"];
 	  for (const language of langs) {
 		context.subscriptions.push(
 		  vscode.languages.registerCompletionItemProvider({ language }, completionProvider),
@@ -48,15 +54,18 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 }
-
 async function reloadFromPath() {
 	const path = vscode.workspace.getConfiguration("zsbc").path;
-	var result= await reader.loadItemsFromCrafttweakerLog(path);
-	return result;
+	if (path.length>0){
+		return await reader.loadItemsFromCrafttweakerLog(path);
+	}
+	return false;
 }
+
 async function loadFromCache() {
 	return await reader.loadCache(workspaceStoragePath);
 }
+
 async function initReload() {
 	var result;
 	if(vscode.workspace.getConfiguration("zsbc").alwaysReload){
@@ -64,11 +73,15 @@ async function initReload() {
 	}else{
 		result=await tryLoadCacheFirst();
 	}
-	await tryLoadAdditionalList();
+	await postReload();
 	return result;
 }
 async function doReloadFromPath() {
 	await reloadFromPath();
+	await postReload();
+}
+
+async function postReload() {
 	await tryLoadAdditionalList();
 }
 async function tryLoadCacheFirst(){

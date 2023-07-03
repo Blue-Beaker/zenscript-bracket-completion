@@ -9,4 +9,5 @@
 - Updated information
 
 ## [0.0.3]
-- Added functionality for loading an additional list.
+- Added functionality for loading an additional list of entries.
+- Performance improvements.
