@@ -3,6 +3,8 @@
 src/**
 .gitignore
 .yarnrc
+*~
+*.kra
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
