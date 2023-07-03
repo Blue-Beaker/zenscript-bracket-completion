@@ -19,15 +19,16 @@ export function activate(context: vscode.ExtensionContext) {
 	const completionProvider: vscode.CompletionItemProvider<vscode.CompletionItem> = {
 		provideCompletionItems(document, position, token, context) {
 			var configuration=vscode.workspace.getConfiguration("zsbc");
-			var range=document.getWordRangeAtPosition(position,/[<>\w\-:]+/);
-			if(configuration.onlyCompleteBrackets && !document.getText(range).startsWith("<")){
+			var range=document.getWordRangeAtPosition(position,/<?[\w\-:]+>?/);
+			var matchrange=range?.with(undefined,position);
+			if(configuration.onlyCompleteBrackets && !document.getText(matchrange).startsWith("<")){
 				return undefined;
 			}
 			var completion:vscode.CompletionItem[]=[];
 		  	reader
 			.getItems().forEach((value,key,map)=>{
 				if(!configuration.completionSuggestAllItems){
-					var match=document.getText(range);
+					var match=document.getText(matchrange);
 					if((configuration.completionSuggestWithStart&&!key.startsWith(match))||key.indexOf(match.slice(1))===-1){return;}
 				}
 				completion.push({label:{label:key,detail:" "+value},detail:value,kind:vscode.CompletionItemKind.Value,range:range} as vscode.CompletionItem);
