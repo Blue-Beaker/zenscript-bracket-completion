@@ -54,3 +54,9 @@ This extension contributes the following settings:
   In every line, everything after the first splitter is considered information. You can't write comment in the same line of an entry.  
   Lines without a splitter are ignored, so them can be used as comment.  
 - When multiple dumped lists are in one file, only the last one will be used.  
+
+## Supported Languages
+Zenscript (CraftTweaker)
+TOML, json and Properties (Mod configs)
+MCFunction (Vanilla)
+Javascript (KubeJS)
