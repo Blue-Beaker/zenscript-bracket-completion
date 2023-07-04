@@ -15,3 +15,7 @@
 ## [0.0.4]
 - In "properties", "toml", "json", "mcfunction", and "javascript", completions are provided in vanilla command style instead.
 - Maybe performance improvements.
+
+## [0.0.5]
+- Fixed hover spamming errors
+- Add support for ini language (used by IC2 mod)

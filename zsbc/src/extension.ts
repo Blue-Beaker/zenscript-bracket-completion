@@ -68,7 +68,8 @@ export function activate(context: vscode.ExtensionContext) {
 			if (!range) { return; }
 			var str = document.getText(range);
 			var result = reader.getItems().get(str);
-			return new vscode.Hover(result || "", range);
+			if(!result){return;}
+			return new vscode.Hover(result, range);
 		},
 	};
 	const hoverProvider: vscode.HoverProvider = {
@@ -77,14 +78,15 @@ export function activate(context: vscode.ExtensionContext) {
 			if (!range) { return; }
 			var str = document.getText(range);
 			var result = reader.getItems().get("<" + str + ">");
-			return new vscode.Hover(result || "", range);
+			if(!result){return;}
+			return new vscode.Hover(result, range);
 		},
 	};
 	context.subscriptions.push(
 		vscode.languages.registerCompletionItemProvider("zenscript", completionProviderZS),
 		vscode.languages.registerHoverProvider("zenscript", hoverProviderZS),
 	);
-	const langs = ["properties", "toml", "json", "mcfunction", "javascript"];
+	const langs = ["properties", "toml", "json", "mcfunction", "javascript", "ini"];
 	for (const language of langs) {
 		context.subscriptions.push(
 			vscode.languages.registerCompletionItemProvider({ language }, completionProvider),
