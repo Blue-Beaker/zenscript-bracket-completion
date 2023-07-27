@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { DataHandler } from "./datareader";
+import * as itemSearcher from "./itemSearcher";
 
 export var workspaceStoragePath: vscode.Uri | undefined;
 export const outputChannel = vscode.window.createOutputChannel("Zenscript Bracket Completion", { log: true });
@@ -13,6 +14,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(vscode.commands.registerCommand('zsbc.reload', () => {
 		doReloadFromPath();
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('zsbc.search', () => {
+		itemSearcher.showItemSearcher();
 	}));
 	initReload();
 	// Autocompletion providers
@@ -125,6 +129,7 @@ async function doReloadFromPath() {
 
 async function postReload() {
 	await tryLoadAdditionalList();
+	await itemSearcher.setRegistries(reader.getItems());
 }
 async function tryLoadCacheFirst() {
 	if (!await loadFromCache()) {

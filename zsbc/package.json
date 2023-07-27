@@ -2,7 +2,7 @@
   "name": "zsbc",
   "displayName": "ZenScript Bracket Completion",
   "description": "ZenScript bracket handlers completion for your modded Minecraft instance.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "icon": "icon.png",
   "publisher": "BlueBeaker",
   "engines": {
@@ -82,6 +82,11 @@
 			{
 				"command": "zsbc.reload",
 				"title": "Reload data from CraftTweaker",
+        "category": "ZenScript Bracket Completion"
+			},
+			{
+				"command": "zsbc.search",
+				"title": "Open Item Searcher",
         "category": "ZenScript Bracket Completion"
 			}
     ]

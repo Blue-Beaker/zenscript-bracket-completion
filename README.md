@@ -18,6 +18,9 @@ A vscode extension that handles autocompletion for ZenScript bracket handlers fo
     ![images/hover.png](images/hover.png)  
     ![images/hover.gif](images/hover.gif)
 
+* Search and insert an item with its name
+
+    ![images/search.png](images/search.png)  
 
 ## Extension Settings
 
