@@ -20,9 +20,9 @@ export function activate(context: vscode.ExtensionContext) {
 		provideCompletionItems(document, position, token, context) {
 			var configuration = vscode.workspace.getConfiguration("zsbc");
 			if(configuration.onlyCompleteBrackets){
-				var range = document.getWordRangeAtPosition(position, /<[\w\-:]+>?/);
+				var range = document.getWordRangeAtPosition(position, /<[\w\-:\.]+>?/);
 			}else{
-				var range = document.getWordRangeAtPosition(position, /<?[\w\-:]+>?/);
+				var range = document.getWordRangeAtPosition(position, /<?[\w\-:\.]+>?/);
 			}
 			if (!range) {outputChannel.appendLine(String(range)); return; }
 			var matchrange = range?.with(undefined, position);
@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const completionProvider: vscode.CompletionItemProvider<vscode.CompletionItem> = {
 		provideCompletionItems(document, position, token, context) {
 			var configuration = vscode.workspace.getConfiguration("zsbc");
-			var range = document.getWordRangeAtPosition(position, /<?[\w\-:]+>?/);
+			var range = document.getWordRangeAtPosition(position, /<?[\w\-:\.]+>?/);
 			if (!range) { return; }
 			var matchrange = range?.with(undefined, position);
 			outputChannel.appendLine("Finding completion entries for "+document.getText(matchrange));
@@ -64,9 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// Hover providers
 	const hoverProviderZS: vscode.HoverProvider = {
 		provideHover(document, position, token) {
-			var range = document.getWordRangeAtPosition(position, /<[\w\-:]+>/);
+			var range = document.getWordRangeAtPosition(position, /<[\w\-:\.]+>(\.withTag\(.*\))?/);
 			if (!range) { return; }
-			var str = document.getText(range);
+			var str = document.getText(range).replace(":0","");
 			var result = reader.getItems().get(str);
 			if(!result){return;}
 			return new vscode.Hover(result, range);
@@ -74,9 +74,9 @@ export function activate(context: vscode.ExtensionContext) {
 	};
 	const hoverProvider: vscode.HoverProvider = {
 		provideHover(document, position, token) {
-			var range = document.getWordRangeAtPosition(position, /[\w\-:]+/);
+			var range = document.getWordRangeAtPosition(position, /[\w\-:\.]+(@[0-9]+)?/);
 			if (!range) { return; }
-			var str = document.getText(range);
+			var str = document.getText(range).replace("@",":").replace(":0","");
 			var result = reader.getItems().get("<" + str + ">");
 			if(!result){return;}
 			return new vscode.Hover(result, range);
