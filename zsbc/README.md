@@ -1,0 +1,1 @@
+/mnt/E/Minecraft/vscode_extensions/zenscript-bracket-completion/README.md
