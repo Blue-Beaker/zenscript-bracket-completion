@@ -25,7 +25,7 @@ export class DataHandler{
             }
         });
     }
-    //Parse a block of our dumped data.
+    /** Parse a block of our dumped data.*/
     private parseItemsFromLines(lines:string[]) {
         this.items=new Map();
         for (var i=0;i<lines.length;i++){
@@ -54,7 +54,7 @@ export class DataHandler{
         }
         return [startindex,endindex];
     }
-    //Reload lines from Crafttweaker Log, which has our dumped data in it.
+    /** Reload lines from Crafttweaker Log, which has our dumped data in it. */
     public async loadItemsFromCrafttweakerLog(path: string) {
         try {
             outputChannel.appendLine("Trying to load from CT log");

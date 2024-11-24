@@ -19,18 +19,18 @@ export function activate(context: vscode.ExtensionContext) {
 		itemSearcher.showItemSearcher();
 	}));
 	initReload();
-	// Autocompletion providers
+	/**Autocompletion providers */ 
 	const completionProviderZS: vscode.CompletionItemProvider<vscode.CompletionItem> = {
 		provideCompletionItems(document, position, token, context) {
 			var configuration = vscode.workspace.getConfiguration("zsbc");
-			if(configuration.onlyCompleteBrackets){
+			if (configuration.onlyCompleteBrackets) {
 				var range = document.getWordRangeAtPosition(position, /<[\w\-:\.]+>?/);
-			}else{
+			} else {
 				var range = document.getWordRangeAtPosition(position, /<?[\w\-:\.]+>?/);
 			}
-			if (!range) {outputChannel.appendLine(String(range)); return; }
+			if (!range) { outputChannel.appendLine(String(range)); return; }
 			var matchrange = range?.with(undefined, position);
-			outputChannel.appendLine("Finding completion entries for "+document.getText(matchrange));
+			outputChannel.appendLine("Finding completion entries for " + document.getText(matchrange));
 			var completion: vscode.CompletionItem[] = [];
 			reader
 				.getItems().forEach((value, key, map) => {
@@ -49,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
 			var range = document.getWordRangeAtPosition(position, /<?[\w\-:\.]+>?/);
 			if (!range) { return; }
 			var matchrange = range?.with(undefined, position);
-			outputChannel.appendLine("Finding completion entries for "+document.getText(matchrange));
+			outputChannel.appendLine("Finding completion entries for " + document.getText(matchrange));
 			var completion: vscode.CompletionItem[] = [];
 			reader
 				.getItems().forEach((value, key, map) => {
@@ -65,14 +65,14 @@ export function activate(context: vscode.ExtensionContext) {
 			return completion;
 		},
 	};
-	// Hover providers
+	/**Hover providers */ 
 	const hoverProviderZS: vscode.HoverProvider = {
 		provideHover(document, position, token) {
 			var range = document.getWordRangeAtPosition(position, /<[\w\-:\.]+>(\.withTag\(.*\))?/);
 			if (!range) { return; }
-			var str = document.getText(range).replace(":0","");
+			var str = document.getText(range).replace(":0", "");
 			var result = reader.getItems().get(str);
-			if(!result){return;}
+			if (!result) { return; }
 			return new vscode.Hover(result, range);
 		},
 	};
@@ -80,9 +80,9 @@ export function activate(context: vscode.ExtensionContext) {
 		provideHover(document, position, token) {
 			var range = document.getWordRangeAtPosition(position, /[\w\-:\.]+(@[0-9]+)?/);
 			if (!range) { return; }
-			var str = document.getText(range).replace("@",":").replace(":0","");
+			var str = document.getText(range).replace("@", ":").replace(":0", "");
 			var result = reader.getItems().get("<" + str + ">");
-			if(!result){return;}
+			if (!result) { return; }
 			return new vscode.Hover(result, range);
 		},
 	};
@@ -97,13 +97,29 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.languages.registerHoverProvider({ language }, hoverProvider)
 		);
 	};
-
-
 }
+/**Try to find crafttweaker log in the workspace when it's not configured. */
+async function findCrafttweakerLog() {
+	var ctLogs = await vscode.workspace.findFiles('**/crafttweaker.log', null, 1);
+	if (ctLogs.length > 0) {
+		return ctLogs[0].fsPath;
+	}
+	else {
+		return null;
+	}
+}
+/**Reload crafttweaker log. */
 async function reloadFromPath() {
 	const path = vscode.workspace.getConfiguration("zsbc").path;
 	if (path.length > 0) {
 		return await reader.loadItemsFromCrafttweakerLog(path);
+	} else {
+		outputChannel.info("No path for crafttweaker.log configured, checking default paths for it");
+		var path2 = await findCrafttweakerLog();
+		if(path2!==null){
+			outputChannel.info("Found crafttweaker.log at "+path2);
+			return await reader.loadItemsFromCrafttweakerLog(path2);
+		}
 	}
 	return false;
 }
