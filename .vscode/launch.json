@@ -10,7 +10,7 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/zsbc"
+				"--extensionDevelopmentPath=${workspaceFolder}/zsbc/"
 			],
 			"outFiles": [
 				"${workspaceFolder}/zsbc/out/**/*.js"
@@ -22,7 +22,7 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/zsbc",
+				"--extensionDevelopmentPath=${workspaceFolder}/zsbc/",
 				"--extensionTestsPath=${workspaceFolder}/zsbc/out/test/suite/index"
 			],
 			"outFiles": [

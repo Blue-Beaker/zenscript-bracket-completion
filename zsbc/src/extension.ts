@@ -18,6 +18,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('zsbc.search', () => {
 		itemSearcher.showItemSearcher();
 	}));
+	context.subscriptions.push(vscode.commands.registerCommand('zsbc.search_multi', () => {
+		itemSearcher.showItemSearcherMulti();
+	}));
 	initReload();
 	/**Autocompletion providers */ 
 	const completionProviderZS: vscode.CompletionItemProvider<vscode.CompletionItem> = {

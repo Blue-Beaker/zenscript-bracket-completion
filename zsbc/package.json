@@ -88,6 +88,11 @@
 				"command": "zsbc.search",
 				"title": "Open Item Searcher",
         "category": "ZenScript Bracket Completion"
+			},
+			{
+				"command": "zsbc.search_multi",
+				"title": "Open Item Searcher (Multi-Select Mode)",
+        "category": "ZenScript Bracket Completion"
 			}
     ]
   },

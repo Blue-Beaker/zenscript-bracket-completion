@@ -8,8 +8,21 @@ export async function setRegistries(registryMap:Map<string,string>){
     });
 }
 export async function showItemSearcher(){
-    var result = await vscode.window.showQuickPick(registries,{title:"Item Searcher",placeHolder:"Pick an item to insert",canPickMany:false});
+    var result = await vscode.window.showQuickPick(registries,{title:"Item Searcher",placeHolder:"Pick an item to insert",matchOnDescription:true,canPickMany:false});
     if(!result || !result.description){return;}
     var editor = vscode.window.activeTextEditor;
     editor?.insertSnippet(new vscode.SnippetString(result.description));
+}
+export async function showItemSearcherMulti(){
+    var result = await vscode.window.showQuickPick(registries,{title:"Item Searcher",placeHolder:"Pick an item to insert",matchOnDescription:true,canPickMany:true});
+    if(result===null || result?.length===0){return;}
+    var editor = vscode.window.activeTextEditor;
+
+    var items:string[] = [];
+    result?.forEach((item)=>{
+        if(item.description){
+            items.push(item.description);
+        }
+    });
+    editor?.insertSnippet(new vscode.SnippetString(items.join(",\n")));
 }
